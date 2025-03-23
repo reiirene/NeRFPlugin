@@ -1,7 +1,7 @@
 # Mip-NeRF 360 Data Setup Guide
 - Official Website: https://jonbarron.info/mipnerf360/
 - Prepped Data
-  - https://drive.google.com/drive/folders/1LbkkiywWdCH_FyGzJAA2CTo7HfEqMkVs?usp=sharing
+  - https://drive.google.com/drive/folders/1BPA51_wKRf4IfFY3YHJLomXAV66r1QVZ?usp=sharing
 
 ## 1. Verify Your Dataset Structure
 - dataset contains
