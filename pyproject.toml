@@ -1,0 +1,13 @@
+[project]
+name = "nerfplugin"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["pydantic>=2.11.3", "typer>=0.15.2"]
+
+[dependency-groups]
+dev = ["mypy>=1.15.0", "pyright>=1.1.399", "ruff>=0.11.5", "taplo>=0.9.3"]
+
+[tool.ruff.lint]
+extend-select = ["I", "PL", "ANN"]
