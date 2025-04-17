@@ -10,7 +10,7 @@ NeRF Plug-in for Game Engine
 To run the cli, use `python -m nerf_cli`
 
 ## Data Transform Usage(step 1)
-# Prerequisites
+### Prerequisites
 
 Make sure you have installed:
 	•	Python 3.7+
@@ -27,7 +27,7 @@ Folder structure
     │   ├── image_002.jpg
     │   └── ...
 ```
-# Run the script
+### Run the script
 ```bash
     python data_transform.py /absolute/path/to/your_dataset
 ```
