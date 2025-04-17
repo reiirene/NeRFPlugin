@@ -13,12 +13,15 @@ To run the cli, use `python -m nerf_cli`
 ### Prerequisites
 
 Make sure you have installed:
-	•	Python 3.7+
-	•	macOS: Please install COLMAP manually using Homebrew:
+
+- **Python 3.7+**
+- **COLMAP**
+  - **macOS**: Please install COLMAP manually using Homebrew:
     ```bash
     brew install colmap
     ```
-	•	Windows/Linux: COLMAP will be downloaded automatically by colmap2nerf.py when needed.
+  - **Windows/Linux**: COLMAP will be downloaded automatically by `colmap2nerf.py` when needed.
+
 Folder structure
 ```bash
     your_dataset/
