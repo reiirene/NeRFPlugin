@@ -45,4 +45,4 @@ def prompt_and_install_system_packages():
         print("   - Add CUDA to PATH (e.g., C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v11.8\\bin)")
     
     else:
-        print(f"Unsupported platform: {current_os}. Please install system dependencies manually.")
+        print(f"Unsupported platform: {current_os}")
