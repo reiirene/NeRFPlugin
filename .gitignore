@@ -9,6 +9,9 @@ wheels/
 # Virtual environments
 .venv
 
+# Visual Studio
+.vs/
+
 # Config files
 .env
 .envrc
