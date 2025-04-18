@@ -9,10 +9,36 @@ NeRF Plug-in for Game Engine
 
 To run the cli, use `python -m nerf_cli`
 
-## Data Transform Usage(step 1)
+## Windows
+### Set up Python Environment
+```bash
+python -m venv venv
+venv\Scripts\activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
 ### Prerequisites
 
 Make sure you have installed:
+
+**Install MSVC, CMAKE and Build Tools for Visual Studio**
+https://visualstudio.microsoft.com/ja/visual-cpp-build-tools/
+**CUDA Toolkit >= 11.4**
+https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
+Check CUDA installation
+```bash
+nvcc --version
+```
+**Ensure CUDA is in your PATH**
+```bash
+where nvcc
+```
+If you see something like:
+```bash
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin\nvcc.exe
+```
+Then it's already in your PATH
+
 
 - **Python 3.7+**
 - **COLMAP**
@@ -21,6 +47,11 @@ Make sure you have installed:
     brew install colmap
     ```
   - **Windows/Linux**: COLMAP will be downloaded automatically by `colmap2nerf.py` when needed.
+
+## Ubuntu/Linux
+
+## MacOS
+
 
 Folder structure
 ```bash
