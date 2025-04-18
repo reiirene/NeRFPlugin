@@ -21,15 +21,15 @@ pip install -r requirements.txt
 
 Make sure you have installed:
 
-**Install MSVC, CMAKE and Build Tools for Visual Studio**
-https://visualstudio.microsoft.com/ja/visual-cpp-build-tools/
-**CUDA Toolkit >= 11.4**
-https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
-Check CUDA installation
+1. **Install MSVC, CMAKE and Build Tools for Visual Studio**<br>
+https://visualstudio.microsoft.com/ja/visual-cpp-build-tools/<br>
+2. **CUDA Toolkit >= 11.4**<br>
+https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html<br>
+Check CUDA installation<br>
 ```bash
 nvcc --version
 ```
-**Ensure CUDA is in your PATH**
+3. **Ensure CUDA is in your PATH**
 ```bash
 where nvcc
 ```
