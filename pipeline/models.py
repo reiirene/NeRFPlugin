@@ -1,14 +1,17 @@
 from typing import Any
-
 from pydantic import BaseModel
+from dataclasses import dataclass
+from typing import Optional
 
 
 class Image(BaseModel):
-    inner: Any
+    inner: str
 
 
 class ColmapOutput(BaseModel):
-    inner: Any
+    inner: str
+    transforms_path: str
+    colmap_path: Optional[str] = None
 
 
 class NerfOutput(BaseModel):
@@ -17,3 +20,4 @@ class NerfOutput(BaseModel):
 
 class PipelineOutput(BaseModel):
     inner: Any
+
