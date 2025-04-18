@@ -9,28 +9,58 @@ NeRF Plug-in for Game Engine
 
 To run the cli, use `python -m nerf_cli`
 
-## Data Transform Usage(step 1)
-### Prerequisites
+## Requirements
+### Python (Cross-platform)
+Install Python >= 3.7
 
-Make sure you have installed:
+## Windows
 
-- **Python 3.7+**
-- **COLMAP**
-  - **macOS**: Please install COLMAP manually using Homebrew:
-    ```bash
-    brew install colmap
-    ```
-  - **Windows/Linux**: COLMAP will be downloaded automatically by `colmap2nerf.py` when needed.
+> Manual installation is required for system-level tools.
 
-Folder structure
+### 1. Install System Dependencies
+
+- [Visual Studio](https://visualstudio.microsoft.com/) with:
+  - **Desktop Development with C++** workload
+  - CMake integration
+- [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) ≥ 11.4
+  - Ensure your GPU is supported
+  - Add CUDA paths to your system environment variables:
+    - `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin`
+    - `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\libnvvp`
+
+### 2. Set up Python Environment
+
 ```bash
-    your_dataset/
-    ├── images/
-    │   ├── image_001.jpg
-    │   ├── image_002.jpg
-    │   └── ...
+python -m venv venv_ngp
+venv_ngp\Scripts\activate
+pip install -r requirements_windows.txt
 ```
-### Run the script
+
+## Ubuntu/Linux
+### 1. Install System Dependencies
+Run the provided helper script (requires sudo):
 ```bash
-    python data_transform.py /absolute/path/to/your_dataset
+bash install ubuntu_deps.sh
+```
+Or manually install:
+```bash
+sudo apt update
+sudo apt install -y build-essential git cmake libglfw3-dev libglew-dev \
+                    libomp-dev libopenexr-dev libxi-dev libxinerama-dev \
+                    libxcursor-dev libpython3-dev python3-pip
+```
+
+### 2. Set up Python Environment
+```bash
+python3 -m venv venv_ngp
+source venv_ngp/bin/activate
+pip install -r requirements_ubuntu.txt
+```
+
+## MacOS
+Due to CUDA's discontinued support of macOS, this plugin cannot be run on a macOS environment
+
+## Run the Pipeline
+```bash
+
 ```
