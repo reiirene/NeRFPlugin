@@ -29,7 +29,7 @@ Install Python >= 3.7
 ```bash
 python -m venv venv_ngp
 venv_ngp\Scripts\activate
-pip install -r requirements_windows.txt
+pip install -r requirements/requirements_windows.txt
 ```
 
 ## Ubuntu/Linux
@@ -50,7 +50,7 @@ sudo apt install -y build-essential git cmake libglfw3-dev libglew-dev \
 ```bash
 python3 -m venv venv_ngp
 source venv_ngp/bin/activate
-pip install -r requirements_ubuntu.txt
+pip install -r requirements/requirements_ubuntu.txt
 ```
 
 ## MacOS
