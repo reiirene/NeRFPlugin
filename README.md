@@ -9,59 +9,58 @@ NeRF Plug-in for Game Engine
 
 To run the cli, use `python -m nerf_cli`
 
+## Requirements
+### Python (Cross-platform)
+Install Python >= 3.7
+
 ## Windows
-### Set up Python Environment
-```bash
-python -m venv venv
-venv\Scripts\activate
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-### Prerequisites
 
-Make sure you have installed:
+> Manual installation is required for system-level tools.
 
-1. **Install MSVC, CMAKE and Build Tools for Visual Studio**<br>
-https://visualstudio.microsoft.com/ja/visual-cpp-build-tools/<br>
-2. **CUDA Toolkit >= 11.4**<br>
-https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html<br>
-Check CUDA installation<br>
-```bash
-nvcc --version
-```
-3. **Ensure CUDA is in your PATH**
-```bash
-where nvcc
-```
-If you see something like:
-```bash
-C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin\nvcc.exe
-```
-Then it's already in your PATH
+### 1. Install System Dependencies
 
+- [Visual Studio](https://visualstudio.microsoft.com/) with:
+  - **Desktop Development with C++** workload
+  - CMake integration
+- [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads) ≥ 11.4
+  - Ensure your GPU is supported
+  - Add CUDA paths to your system environment variables:
+    - `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin`
+    - `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\libnvvp`
 
-- **Python 3.7+**
-- **COLMAP**
-  - **macOS**: Please install COLMAP manually using Homebrew:
-    ```bash
-    brew install colmap
-    ```
-  - **Windows/Linux**: COLMAP will be downloaded automatically by `colmap2nerf.py` when needed.
+### 2. Set up Python Environment
+
+```bash
+python -m venv venv_ngp
+venv_ngp\Scripts\activate
+pip install -r requirements_windows.txt
+```
 
 ## Ubuntu/Linux
+### 1. Install System Dependencies
+Run the provided helper script (requires sudo):
+```bash
+bash install ubuntu_deps.sh
+```
+Or manually install:
+```bash
+sudo apt update
+sudo apt install -y build-essential git cmake libglfw3-dev libglew-dev \
+                    libomp-dev libopenexr-dev libxi-dev libxinerama-dev \
+                    libxcursor-dev libpython3-dev python3-pip
+```
+
+### 2. Set up Python Environment
+```bash
+python3 -m venv venv_ngp
+source venv_ngp/bin/activate
+pip install -r requirements_ubuntu.txt
+```
 
 ## MacOS
+Due to CUDA's discontinued support of macOS, this plugin cannot be run on a macOS environment
 
+## Run the Pipeline
+```bash
 
-Folder structure
-```bash
-    your_dataset/
-    ├── images/
-    │   ├── image_001.jpg
-    │   ├── image_002.jpg
-    │   └── ...
-```
-### Run the script
-```bash
-    python data_transform.py /absolute/path/to/your_dataset
 ```
