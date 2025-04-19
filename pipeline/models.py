@@ -11,6 +11,7 @@ class ColmapOutput(BaseModel):
     inner: str
     transforms_path: str
     colmap_path: Optional[str] = None
+    ngp_repo_path: Optional[str] = None
 
 class NerfOutput(BaseModel):
     inner: str
