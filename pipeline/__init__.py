@@ -1,11 +1,18 @@
+import os
+import sys
 from .pipeline import PipelineBuilder
 from .utils import (
-    install_ngp_python_deps,
-    prompt_and_install_system_packages
+    check_system_requirements,
+    prompt_for_dependency_check
 )
 
-install_ngp_python_deps()
-prompt_and_install_system_packages
+# 1. Print system prerequisites based on OS
+check_system_requirements()
+
+# 2. Prompt to install Python and system dependencies
+if not prompt_for_dependency_check():
+    print("Pipeline aborted due to missing dependencies.")
+    sys.exit(1)
 
 from .transformers import (
     ColmapTransformer,
