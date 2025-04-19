@@ -19,5 +19,5 @@ nerf_pipeline = (
     .add_step(ImageReader())
     .add_step(ColmapTransformer())
     .add_step(NerfTransformer(scene_name="flowers"))
-    .add_step(Exporter())
+    #.add_step(Exporter())
 )
