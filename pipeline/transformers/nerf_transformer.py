@@ -44,4 +44,21 @@ class NerfTransformer(Transformer[ColmapOutput, NerfOutput]):
         ], cwd=self.ngp_dir, check=True)
 
     def transform(self, input: ColmapOutput) -> NerfOutput:
-        return NerfOutput(inner=input.inner + " nerf_transformed")
+
+        self.clone_and_build_ngp()
+    
+        self.scene_dir = os.path.dirname(input.transforms_path)
+        
+        self.run_ngp_training()
+        
+        snapshot_path = os.path.join(self.output_dir, f"{self.scene_name}.msgpack")
+        mesh_path = os.path.join(self.output_dir, f"{self.scene_name}.ply")
+        
+        return NerfOutput(
+            inner=input.inner + " nerf_transformed",
+            transforms_path=input.transforms_path,
+            colmap_path=input.colmap_path,
+            snapshot_path=snapshot_path,
+            mesh_path=mesh_path if os.path.exists(mesh_path) else None
+        )
+        #return NerfOutput(inner=input.inner + " nerf_transformed")
