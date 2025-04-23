@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 from binascii import b2a_uu
 from ..models import ColmapOutput, NerfOutput
@@ -12,8 +13,10 @@ class NerfTransformer(Transformer[ColmapOutput, NerfOutput]):
         # Extract info from input_data
         self.scene_dir = os.path.abspath(input_data.inner)
         self.scene_name = os.path.basename(self.scene_dir)
-        self.ngp_dir = input_data.ngp_repo_path or os.path.abspath("instant-ngp")
-        self.ngp_dir = os.path.abspath("instant-ngp")
+        if not input_data.ngp_repo_path:
+            raise ValueError("ngp_repo_path is not set in ColmapOutput.")
+        self.ngp_dir = os.path.abspath(input_data.ngp_repo_path)
+
         self.output_dir = os.path.abspath("saved")
         self.snapshot_path = os.path.join(self.output_dir, f"{self.scene_name}_snapshot.msgpack")
         self.mesh_path = os.path.join(self.output_dir, f"{self.scene_name}_mesh.ply")
@@ -23,9 +26,9 @@ class NerfTransformer(Transformer[ColmapOutput, NerfOutput]):
         self.run_ngp_training()
         
         return NerfOutput(
-            inner=input.inner + " nerf_transformed",
-            transforms_path=input.transforms_path,
-            colmap_path=input.colmap_path,
+            inner=self.input_data.inner + " nerf_transformed",
+            transforms_path=self.input_data.transforms_path,
+            colmap_path=self.input_data.colmap_path,
             snapshot_path=self.snapshot_path,
             mesh_path=self.mesh_path,
         )
@@ -37,7 +40,7 @@ class NerfTransformer(Transformer[ColmapOutput, NerfOutput]):
 
         os.makedirs(self.output_dir, exist_ok=True)
         subprocess.run([
-            "python", run_path,
+            sys.executable, run_path,
             "--scene", self.scene_dir,
             "--n_steps", str(self.n_steps),
             "--save_snapshot", self.snapshot_path,
