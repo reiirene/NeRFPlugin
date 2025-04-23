@@ -59,6 +59,13 @@ sudo apt install -y build-essential git cmake libglfw3-dev libglew-dev \
                     libomp-dev libopenexr-dev libxi-dev libxinerama-dev \
                     libxcursor-dev libpython3-dev python3-pip
 ```
+Install COLMAP
+```bash
+# Install COLMAP
+sudo apt install -y colmap
+# Verify installation
+colmap --version
+```
 
 ### 2. Set up Python Environment
 ```bash
@@ -74,5 +81,5 @@ Due to CUDA's discontinued support of macOS, this plugin cannot be run on a macO
 
 To run the cli, use
 ```bash
-python -m nerf_cli
+python -m nerf_cli path\to\data
 ```
