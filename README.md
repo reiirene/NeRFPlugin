@@ -23,7 +23,21 @@ Install Python >= 3.7
   - Add CUDA paths to your system environment variables:
     - `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin`
     - `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\libnvvp`
-
+- [COLMAP](https://colmap.github.io/install.html) (Required for 3D reconstruction):
+  - Download the Windows binary from the official site
+  - Add COLMAP to your system PATH:
+    ```bash
+    # Example (run in PowerShell as Admin):
+    [Environment]::SetEnvironmentVariable(
+        "Path",
+        [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) + ";C:\Program Files\COLMAP-3.8",
+        [EnvironmentVariableTarget]::Machine
+    )
+    ```
+  - Verify installation:
+    ```bash
+    colmap --version
+    ```
 ### 2. Set up Python Environment
 
 ```bash
@@ -45,6 +59,13 @@ sudo apt install -y build-essential git cmake libglfw3-dev libglew-dev \
                     libomp-dev libopenexr-dev libxi-dev libxinerama-dev \
                     libxcursor-dev libpython3-dev python3-pip
 ```
+Install COLMAP
+```bash
+# Install COLMAP
+sudo apt install -y colmap
+# Verify installation
+colmap --version
+```
 
 ### 2. Set up Python Environment
 ```bash
@@ -60,5 +81,5 @@ Due to CUDA's discontinued support of macOS, this plugin cannot be run on a macO
 
 To run the cli, use
 ```bash
-python -m nerf_cli
+python -m nerf_cli path\to\data
 ```
