@@ -1,19 +1,29 @@
 import sys
-import time
+import os
+import subprocess
 
 if __name__ == "__main__":
-    print("[INFO] Python script started.")
-    
-    if len(sys.argv) > 1:
-        print(f"[INFO] Received image folder path: {sys.argv[1]}")
-    else:
-        print("[WARNING] No image folder path received.")
-    
-    for i in range(5):
-        print(f"[TRAINING] Simulating training step {i+1}/5...")
-        time.sleep(1)
+    if len(sys.argv) < 2:
+        print("Usage: python ngp_runner.py /path/to/data")
+        sys.exit(1)
 
-    print("[INFO] Training simulation complete. Exporting output.obj...")
+    data_path = sys.argv[1]
+    print(f"[INFO] Running nerf_cli pipeline with data path: {data_path}")
+
+    # 构建运行命令
+    cmd = [sys.executable, "-m", "nerf_cli", data_path]
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    print("======== STDOUT ========")
+    print(result.stdout)
+    print("======== STDERR ========")
+    print(result.stderr)
+
+    # 模拟生成 Unity 可加载的输出模型[测试使用]
+    # 训练 pipeline 最后真的导出了 .obj 文件之后，要修改这一段
+    os.makedirs("Assets/NeRFPlugin/Outputs", exist_ok=True)
     with open("Assets/NeRFPlugin/Outputs/output.obj", "w") as f:
-        f.write("# OBJ dummy file\n")
-    print("[SUCCESS] output.obj has been successfully generated.")
+        f.write("# Dummy .obj generated after CLI pipeline\n")
+
+    print("[SUCCESS] output.obj generated. Unity can now load the model.")

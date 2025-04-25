@@ -1,0 +1,8 @@
+# Python
+-r requirements_common.txt
+
+# System packages (manual note)
+# These must be installed using apt:
+# sudo apt install build-essential git cmake libglfw3-dev libglew-dev \
+#                  libomp-dev libopenexr-dev libxi-dev libxinerama-dev \
+#                  libxcursor-dev libpython3-dev python3-pip
