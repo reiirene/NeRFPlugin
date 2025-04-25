@@ -83,3 +83,34 @@ To run the cli, use
 ```bash
 python -m nerf_cli path\to\data
 ```
+
+# Usage Guide: How to Use NeRFPlugin in Unity
+
+## Import Plugin
+
+1. Open Unity.
+2. Navigate to `Window > Package Manager`.
+3. Click `+ > Add package from disk...`.
+4. Select `NeRFPlugin/package.json` to import the plugin.
+
+## Scene Setup
+
+1. Create an empty GameObject in your scene and rename it to `NeRFRunner`.
+2. Attach the `TrainingOrchestrator.cs` script to the `NeRFRunner` GameObject.
+3. Configure the following fields in the Inspector:
+   - **Python script path**: `Scripts/ngp_runner.py`
+   - **Image folder path**: Absolute path to your training image data
+   - **AutoRun**: Tick the checkbox if you want training to automatically start when playing.
+
+## Run the Plugin
+
+1. Click the **Play** button in Unity.
+2. `TrainingOrchestrator.cs` will launch the Python script.
+3. `ngp_runner.py` internally executes the following command:python -m nerf_cli /your/image/path
+4. `nerf_cli` runs the complete NeRF training pipeline.
+5. Upon completion, the pipeline writes an `output.obj` file into:Assets/NeRFPlugin/Outputs/output.obj
+6. `MeshAutoLoader.cs` automatically detects the generated `output.obj` file.
+7. `ObjImporter.cs` parses the `.obj` file and constructs a Unity `Mesh`.
+8. The 3D model is successfully loaded and displayed inside the Unity scene.
+
+
