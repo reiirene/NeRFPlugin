@@ -1,0 +1,7 @@
+# Python packages
+-r requirements_common.txt
+
+# Manual Windows Setup Required:
+# - Visual Studio (with C++ CMake tools)
+# - CUDA Toolkit >= 11.4
+# - Ensure CUDA is in your PATH
