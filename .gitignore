@@ -1,4 +1,4 @@
-# Python-generated files
+# --- Python ---
 __pycache__/
 *.py[oc]
 build/
@@ -6,12 +6,72 @@ dist/
 wheels/
 *.egg-info
 
-# Virtual environments
-.venv
+# --- Virtual Environments ---
+.venv/
+venv*/
+env*/
+.Python
 
-# Visual Studio
+# --- Visual Studio ---
 .vs/
+*.sln
+*.vcxproj*
+*.user
+*.filters
+*.opensdf
+*.sdf
+*.pdb
+*.obj
+*.idb
+*.tlog
+*.log
+*.ipch
+*.aps
+*.ncb
+*.dll
+*.exe
+*.lib
+*.exp
+*.ilk
+*.iobj
+*.ipdb
 
-# Config files
-.env
-.envrc
+# --- Unity Specific ---
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+*.csproj
+*.unityproj
+*.sln
+*.userprefs
+*.pidb
+*.booproj
+*.suo
+*.svd
+*.pdb
+*.mdb
+*.bak
+*.old
+*.tmp
+*.log
+*.orig
+*.diff
+*.patch
+
+# --- Plugin + instant-ngp ---
+Assets/NeRFPlugin/instant-ngp/build/
+Assets/NeRFPlugin/Outputs/
+Assets/NeRFPlugin/Inputs/deps_input.txt
+Assets/NeRFPlugin/Outputs/pipeline_log.txt
+Assets/NeRFPlugin/instant-ngp/dependencies/dlss/lib/Windows_x86_64/dev/nvngx_dlss.dll
+Assets/NeRFPlugin/instant-ngp/dependencies/dlss/lib/Windows_x86_64/rel/nvngx_dlss.dll
+launch_pipeline.bat
+temp_*.bat
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db

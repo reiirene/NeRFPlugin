@@ -4,17 +4,17 @@ using System.IO;
 
 public class TrainingOrchestrator : MonoBehaviour
 {
-    [Header("是否自动启动训练脚本")]
-    public bool autoRun = true;  // ✅ Inspector 中的勾选项
+    [Header("Automatically run the training script on start")]
+    public bool autoRun = true;
 
-    [Header("Python 脚本路径（相对路径 or 绝对路径）")]
+    [Header("Path to the Python script (relative or absolute)")]
     public string pythonScript = "Assets/NeRFPlugin/Scripts/ngp_runner.py";
 
-    [Header("图片输入路径（绝对路径）")]
+    [Header("Image input folder path (absolute)")]
     public string imageFolderPath = "/Users/yourname/Desktop/flowermug";
 
-    [Header("Python 可执行文件名")]
-    public string pythonCommand = "python3"; // Windows 可改为 "python"
+    [Header("Python executable name")]
+    public string pythonCommand = "python3"; // Use "python" on Windows if needed
 
     void Start()
     {
@@ -24,7 +24,7 @@ public class TrainingOrchestrator : MonoBehaviour
         }
         else
         {
-            Debug.Log("🔕 autoRun 未勾选，TrainingOrchestrator 不执行 Python 脚本");
+            UnityEngine.Debug.Log("autoRun is disabled. TrainingOrchestrator will not run the Python script.");
         }
     }
 
@@ -49,12 +49,12 @@ public class TrainingOrchestrator : MonoBehaviour
 
         process.OutputDataReceived += (sender, e) => {
             if (!string.IsNullOrEmpty(e.Data))
-                UnityEngine.Debug.Log($"[py-out] {e.Data}");
+                UnityEngine.Debug.Log($"[stdout] {e.Data}");
         };
 
         process.ErrorDataReceived += (sender, e) => {
             if (!string.IsNullOrEmpty(e.Data))
-                UnityEngine.Debug.LogError($"[py-err] {e.Data}");
+                UnityEngine.Debug.LogError($"[stderr] {e.Data}");
         };
 
         try
@@ -62,11 +62,11 @@ public class TrainingOrchestrator : MonoBehaviour
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
-            UnityEngine.Debug.Log("🚀 已启动 NeRF pipeline 脚本！");
+            UnityEngine.Debug.Log("NeRF pipeline script started.");
         }
         catch (System.Exception ex)
         {
-            UnityEngine.Debug.LogError($"❌ 启动失败：{ex.Message}");
+            UnityEngine.Debug.LogError($"Failed to start process: {ex.Message}");
         }
     }
 }
