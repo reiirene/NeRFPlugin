@@ -7,58 +7,59 @@ public static class NerfPluginInstaller
 {
     static NerfPluginInstaller()
     {
-        // Get absolute path to the plugin package root
         string editorScriptPath = GetInstallerScriptPath();
-        string packageRoot = Path.GetFullPath(Path.Combine(editorScriptPath, "..", ".."));
+        string pluginRoot = Path.GetFullPath(Path.Combine(editorScriptPath, "..", ".."));
 
-        string pluginDestRoot = Path.Combine(Application.dataPath, "NeRFPlugin");
+        string unityDestRoot = Path.Combine(Application.dataPath, "NeRFPlugin", "Scripts");
+        string topLevelDestRoot = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "NeRFPlugin");
 
-        // Copy ngp_runner.py
-        string sourceRunner = Path.Combine(packageRoot, "Scripts", "ngp_runner.py");
-        string destRunnerDir = Path.Combine(pluginDestRoot, "Scripts");
-        string destRunner = Path.Combine(destRunnerDir, "ngp_runner.py");
-
-        if (!File.Exists(destRunner) && File.Exists(sourceRunner))
+        // Skip copy if already in Assets/NeRFPlugin
+        string expectedPluginPath = Path.Combine(Application.dataPath, "NeRFPlugin").Replace("\\", "/");
+        if (pluginRoot.Replace("\\", "/") == expectedPluginPath)
         {
-            Directory.CreateDirectory(destRunnerDir);
-            File.Copy(sourceRunner, destRunner);
-            Debug.Log("ngp_runner.py copied to Assets/NeRFPlugin/Scripts/");
+            Debug.Log("NerfPluginInstaller: Plugin is already installed in Assets/NeRFPlugin — skipping copy.");
+            return;
         }
 
-        // Copy nerf_cli/
-        string sourceNerfCli = Path.Combine(packageRoot, "nerf_cli");
-        string destNerfCli = Path.Combine(pluginDestRoot, "nerf_cli");
-        if (Directory.Exists(sourceNerfCli) && !Directory.Exists(destNerfCli))
-        {
-            CopyDirectory(sourceNerfCli, destNerfCli);
-            Debug.Log("nerf_cli copied to Assets/NeRFPlugin/nerf_cli/");
-        }
+        // Copy ngp_runner.py to Unity scripts folder
+        CopyAndLog("Scripts/ngp_runner.py", pluginRoot, unityDestRoot);
 
-        // Copy pipeline/
-        string sourcePipeline = Path.Combine(packageRoot, "pipeline");
-        string destPipeline = Path.Combine(pluginDestRoot, "pipeline");
-        if (Directory.Exists(sourcePipeline) && !Directory.Exists(destPipeline))
-        {
-            CopyDirectory(sourcePipeline, destPipeline);
-            Debug.Log("pipeline copied to Assets/NeRFPlugin/pipeline/");
-        }
-
-        // Copy setup.py
-        string sourceSetup = Path.Combine(packageRoot, "setup.py");
-        string destSetup = Path.Combine(pluginDestRoot, "setup.py");
-        if (File.Exists(sourceSetup) && !File.Exists(destSetup))
-        {
-            File.Copy(sourceSetup, destSetup);
-            Debug.Log("setup.py copied to Assets/NeRFPlugin/setup.py");
-        }
+        // Copy Python modules to top-level NeRFPlugin folder
+        CopyFolderIfExists("nerf_cli", pluginRoot, topLevelDestRoot);
+        CopyFolderIfExists("pipeline", pluginRoot, topLevelDestRoot);
+        CopyAndLog("setup.py", pluginRoot, topLevelDestRoot);
 
         AssetDatabase.Refresh();
+    }
+
+    private static void CopyAndLog(string relativePath, string srcRoot, string destRoot)
+    {
+        string source = Path.Combine(srcRoot, relativePath);
+        string dest = Path.Combine(destRoot, Path.GetFileName(relativePath));
+
+        if (File.Exists(source))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(dest));
+            File.Copy(source, dest, overwrite: true);
+            Debug.Log($"{Path.GetFileName(source)} copied to {dest}");
+        }
+    }
+
+    private static void CopyFolderIfExists(string folderName, string srcRoot, string destRoot)
+    {
+        string sourceFolder = Path.Combine(srcRoot, folderName);
+        string destFolder = Path.Combine(destRoot, folderName);
+
+        if (Directory.Exists(sourceFolder))
+        {
+            CopyDirectory(sourceFolder, destFolder);
+            Debug.Log($"{folderName} copied to {destFolder}");
+        }
     }
 
     private static void CopyDirectory(string sourceDir, string destDir)
     {
         Directory.CreateDirectory(destDir);
-
         foreach (string file in Directory.GetFiles(sourceDir))
         {
             string destFile = Path.Combine(destDir, Path.GetFileName(file));

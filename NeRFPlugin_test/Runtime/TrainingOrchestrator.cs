@@ -8,7 +8,7 @@ public class TrainingOrchestrator : MonoBehaviour
     public bool autoRun = true;
 
     [Header("Path to the Python script (relative or absolute)")]
-    public string pythonScript = "Assets/NeRFPlugin/Scripts/ngp_runner.py";
+    public string pythonScript = "Assets/Scripts/ngp_runner.py"; // Assuming flattened structure
 
     [Header("Image input folder path (absolute)")]
     public string imageFolderPath = "/Users/yourname/Desktop/flowermug";

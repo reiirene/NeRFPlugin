@@ -9,9 +9,19 @@ from ..models import ColmapOutput, Image
 from ..transformer import Transformer
 
 REPO_URL = "https://github.com/NVlabs/instant-ngp.git"
+
+# Resolve Unity project structure
+current_file = Path(__file__).resolve()
+
+PROJECT_ROOT = Path(__file__).resolve()
+while PROJECT_ROOT.name != "Assets":
+    PROJECT_ROOT = PROJECT_ROOT.parent
+PROJECT_ROOT = PROJECT_ROOT.parent  # Go from Assets -> Unity root
+
 REPO_DIR = "instant-ngp"
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-REPO_PATH = PROJECT_ROOT / "instant-ngp"
+REPO_PATH = PROJECT_ROOT / REPO_DIR
+
+
 
 class ColmapTransformer(Transformer[Image, ColmapOutput]):
     
@@ -35,7 +45,7 @@ class ColmapTransformer(Transformer[Image, ColmapOutput]):
         )
     
     def _clone_repo(self) -> str:
-        repo_path = PROJECT_ROOT / REPO_DIR
+        repo_path = REPO_PATH
         if os.path.exists(repo_path):
             print(f"'{REPO_DIR}' already exists. Skipping git clone.")
             return repo_path

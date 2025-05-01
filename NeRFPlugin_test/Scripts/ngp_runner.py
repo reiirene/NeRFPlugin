@@ -3,32 +3,40 @@ import os
 import subprocess
 import traceback
 import shutil
+import platform
+import logging
+from pathlib import Path
 
 print("[DEBUG] ngp_runner.py actually started")
 
+# Set up logging
+log_path = os.path.join("Assets", "NeRFPlugin", "Outputs", "pipeline_log.txt")
+os.makedirs(os.path.dirname(log_path), exist_ok=True)
+
+logging.basicConfig(
+    filename=log_path,
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s: %(message)s'
+)
+
+def log(msg):
+    print(msg)
+    logging.info(msg)
+
+def log_exception(e):
+    tb = traceback.format_exc()
+    print(tb)
+    with open(log_path, "a") as f:
+        f.write(tb + "\n")
+
 try:
     if len(sys.argv) < 2:
-        print("[ERROR] Not enough arguments. Usage: python ngp_runner.py /path/to/data")
+        log("[ERROR] Not enough arguments. Usage: python ngp_runner.py /path/to/data")
         sys.exit(1)
 
     data_path = sys.argv[1]
-    input_file_path = os.path.join("Assets", "NeRFPlugin", "Inputs", "deps_input.txt")
-    log_path = os.path.join("Assets", "NeRFPlugin", "Outputs", "pipeline_log.txt")
-    os.makedirs(os.path.dirname(log_path), exist_ok=True)
-    os.makedirs(os.path.dirname(input_file_path), exist_ok=True)
-
-    def log(msg):
-        print(msg)
-        with open(log_path, "a") as f:
-            f.write(msg + "\n")
-
     log("[STEP 1] Parsed data path: " + data_path)
-
-    def read_user_input():
-        if os.path.exists(input_file_path):
-            with open(input_file_path, "r") as f:
-                return f.read().strip().lower()
-        return ""
+    log(f"[DEBUG] Python version: {platform.python_version()}")
 
     # Try importing nerf_cli
     try:
@@ -36,29 +44,26 @@ try:
         log("[STEP 2] nerf_cli is importable")
     except ImportError:
         log("[STEP 2b] nerf_cli not found. Trying auto-install...")
+        script_dir = Path(__file__).resolve().parent
+        plugin_root = Path(__file__).resolve().parents[3] / "NeRFPlugin"
+        setup_path = plugin_root / "setup.py"
 
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        plugin_root = os.path.abspath(os.path.join(script_dir, ".."))
-        setup_path = os.path.join(plugin_root, "setup.py")
-
-        if not os.path.exists(setup_path):
+        if not setup_path.exists():
             log(f"[ERROR] setup.py not found in plugin root: {setup_path}")
             sys.exit(1)
 
         try:
             log(f"[STEP 2c] Running pip install -e {plugin_root}")
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "-e", plugin_root])
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "-e", str(plugin_root)])
             log("[STEP 2d] Restarting script after pip install...")
-            subprocess.check_call([sys.executable, os.path.abspath(__file__)] + sys.argv[1:])
+            subprocess.check_call([sys.executable, __file__] + sys.argv[1:])
             sys.exit(0)
         except Exception as e:
             log(f"[ERROR] Failed to auto-install nerf_cli: {e}")
-            traceback.print_exc()
-            with open(log_path, "a") as f:
-                traceback.print_exc(file=f)
+            log_exception(e)
             sys.exit(1)
 
-    # Search for vcvars64.bat in common locations
+    # Search for vcvars64.bat
     def find_vcvars():
         vs_paths = [
             os.environ.get("VSINSTALLDIR"),
@@ -75,55 +80,51 @@ try:
         return None
 
     vcvars_path = find_vcvars()
+    bat_script = os.path.join("Assets", "NeRFPlugin", "Outputs", "launch_pipeline.bat")
+    os.makedirs(os.path.dirname(bat_script), exist_ok=True)
 
     if vcvars_path:
-        bat_command = f'"{vcvars_path}" && "{sys.executable}" -m nerf_cli "{data_path}"'
-        log(f"[INFO] Running with Visual Studio environment: {bat_command}")
+        with open(bat_script, "w") as f:
+            f.write(f'@echo off\n')
+            f.write(f'call "{vcvars_path}"\n')
+            f.write(f'"{sys.executable}" -m nerf_cli "{data_path}"\n')
+            f.write("pause\n")
 
-        try:
-            process = subprocess.Popen(f'cmd.exe /c "{bat_command}"',
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       shell=True,
-                                       text=True)
-        except Exception as e:
-            log(f"[ERROR] Failed to launch process via vcvars64.bat: {e}")
-            traceback.print_exc()
-            sys.exit(1)
+        log(f"[INFO] Created batch file: {bat_script}")
+        log("[INFO] Launching external terminal...")
+
+        subprocess.Popen(
+            ["cmd.exe", "/k", bat_script],
+            creationflags=subprocess.CREATE_NEW_CONSOLE
+        )
+        log("[INFO] External terminal launched. Exiting runner.")
+        sys.exit(0)
+
     else:
         log("[WARN] vcvars64.bat not found. Running without Visual Studio environment.")
         cmd = [sys.executable, "-m", "nerf_cli", data_path]
         try:
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            for line in process.stdout:
+                log(f"[stdout] {line.strip()}")
+            for line in process.stderr:
+                log(f"[stderr] {line.strip()}")
+            process.wait()
         except Exception as e:
             log(f"[ERROR] Failed to launch subprocess: {e}")
-            traceback.print_exc()
-            with open(log_path, "a") as f:
-                traceback.print_exc(file=f)
+            log_exception(e)
             sys.exit(1)
 
-    for line in process.stdout:
-        log(f"[stdout] {line.strip()}")
-    for line in process.stderr:
-        log(f"[stderr] {line.strip()}")
-
-    process.wait()
     log("[STEP 4] Process finished.")
 
-    os.makedirs("Assets/NeRFPlugin/Outputs", exist_ok=True)
-    with open("Assets/NeRFPlugin/Outputs/output.obj", "w") as f:
+    # Dummy output (only if not launched externally)
+    output_path = os.path.join("Assets", "NeRFPlugin", "Outputs", "output.obj")
+    with open(output_path, "w") as f:
         f.write("# Dummy .obj generated\n")
 
     log("[SUCCESS] output.obj generated.")
 
 except Exception as e:
-    def log(msg):
-        print(msg)
-        with open("Assets/NeRFPlugin/Outputs/pipeline_log.txt", "a") as f:
-            f.write(msg + "\n")
-
     log(f"[ERROR] Exception occurred: {e}")
-    traceback.print_exc()
-    with open("Assets/NeRFPlugin/Outputs/pipeline_log.txt", "a") as f:
-        traceback.print_exc(file=f)
+    log_exception(e)
     sys.exit(1)
