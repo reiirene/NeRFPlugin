@@ -1,0 +1,36 @@
+# Ensure text files use LF (except .bat)
+* text=auto eol=lf
+
+# Force CRLF for Windows batch files
+*.bat text eol=crlf
+
+# Normalize Python source code
+*.py text eol=lf
+
+# Normalize C# and Unity scripts
+*.cs text eol=lf
+*.shader text eol=lf
+*.cginc text eol=lf
+*.txt text eol=lf
+*.asmdef text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+
+# Binary files (no diff)
+*.png binary
+*.jpg binary
+*.fbx binary
+*.obj binary
+*.dll binary
+*.exe binary
+*.mp4 binary
+*.mov binary
+*.glb binary
+
+# Unity metadata files (treated as text to resolve merge conflicts)
+*.meta text merge=union
+
+# Prevent renormalizing already committed files
+.gitattributes export-ignore
