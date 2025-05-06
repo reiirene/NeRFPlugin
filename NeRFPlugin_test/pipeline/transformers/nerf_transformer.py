@@ -17,7 +17,7 @@ class NerfTransformer(Transformer[ColmapOutput, NerfOutput]):
             raise ValueError("ngp_repo_path is not set in ColmapOutput.")
         self.ngp_dir = os.path.abspath(input_data.ngp_repo_path)
 
-        self.output_dir = os.path.abspath("saved")
+        self.output_dir = os.path.abspath(os.path.join("Assets", "NeRFPlugin", "Outputs"))
         self.snapshot_path = os.path.join(self.output_dir, f"{self.scene_name}_snapshot.msgpack")
         self.mesh_path = os.path.join(self.output_dir, f"{self.scene_name}_mesh.ply")
 
@@ -45,5 +45,7 @@ class NerfTransformer(Transformer[ColmapOutput, NerfOutput]):
             "--n_steps", str(self.n_steps),
             "--save_snapshot", self.snapshot_path,
             "--save_mesh", self.mesh_path,
+            "--save_raw_volumes",
+            "--save_mesh_format", "obj",
             "--train"
         ], cwd=self.ngp_dir, check=True)

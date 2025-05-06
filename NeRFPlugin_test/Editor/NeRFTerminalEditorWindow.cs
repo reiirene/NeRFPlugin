@@ -64,6 +64,16 @@ public class NeRFTerminalEditorWindow : EditorWindow
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(300));
         EditorGUILayout.TextArea(output.ToString(), GUILayout.ExpandHeight(true));
         EditorGUILayout.EndScrollView();
+
+        if (GUILayout.Button("Load .ply"))
+        {
+            LoadPlyModel();
+        }
+        if (GUILayout.Button("Load .vol Volume"))
+        {
+            LoadVolumeModel();
+        }
+
     }
 
     void RunCommand()
@@ -145,4 +155,53 @@ public class NeRFTerminalEditorWindow : EditorWindow
         output.AppendLine(line);
         Repaint();
     }
+
+    private void LoadPlyModel()
+    {
+        string path = EditorUtility.OpenFilePanel("Select .Ply Model", "Assets/NeRFPlugin/Outputs", "ply");
+        if (string.IsNullOrEmpty(path))
+        {
+            AppendOutput("[INFO] No file selected");
+            return;
+        }
+
+        GameObject model = PlyImporter.Import(path);
+        if (model != null)
+        {
+            model.name = Path.GetFileNameWithoutExtension(path);
+            model.transform.position = Vector3.zero;
+            Selection.activeGameObject = model;
+            AppendOutput("$[INFO] Loaded model: {path}");
+        }
+        else
+        {
+            AppendOutput($"[ERROR] Failed to load .ply model: {path}");
+        }
+    }
+    private void LoadVolumeModel()
+    {
+        string path = EditorUtility.OpenFilePanel("Select .vol Volume", "Assets/NeRFPlugin/Outputs", "vol");
+        if (string.IsNullOrEmpty(path))
+        {
+            AppendOutput("[INFO] No volume file selected");
+            return;
+        }
+
+        // Create a container GameObject and attach VolumeLoader
+        GameObject container = new GameObject("LoadedVolume");
+        VolumeLoader loader = container.AddComponent<VolumeLoader>();
+        loader.volumePath = path;
+
+        Texture3D volume = loader.LoadVolume();
+        if (volume != null)
+        {
+            AppendOutput($"[INFO] Loaded volume from: {path}");
+            // You can also assign this texture to a volume material if desired
+        }
+        else
+        {
+            AppendOutput($"[ERROR] Failed to load volume from: {path}");
+        }
+    }
+
 }

@@ -88,7 +88,7 @@ try:
             f.write(f'@echo off\n')
             f.write(f'call "{vcvars_path}"\n')
             f.write(f'"{sys.executable}" -m nerf_cli "{data_path}"\n')
-            f.write("pause\n")
+            # f.write("exit\n")
 
         log(f"[INFO] Created batch file: {bat_script}")
         log("[INFO] Launching external terminal...")

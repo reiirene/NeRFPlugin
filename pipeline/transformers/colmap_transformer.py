@@ -21,13 +21,18 @@ PROJECT_ROOT = PROJECT_ROOT.parent  # Go from Assets -> Unity root
 REPO_DIR = "instant-ngp"
 REPO_PATH = PROJECT_ROOT / REPO_DIR
 
+VALID_IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff'}
 
+def is_image_file(filename):
+    return Path(filename).suffix.lower() in VALID_IMAGE_EXTS
 
 class ColmapTransformer(Transformer[Image, ColmapOutput]):
     
     def transform(self, input: Image) -> ColmapOutput:
         image_dir = os.path.abspath(input.inner)
         print("Detected platform:", platform.system())
+
+        self._filter_image_directory(image_dir)
   
         repo_path = self._clone_repo()
         self._build_instant_ngp(repo_path)

@@ -3,7 +3,7 @@ Write-Host "Cleaning NeRFPlugin build artifacts..."
 
 # 1. Move native build folder out of Assets
 $buildPath = "Assets/NeRFPlugin/instant-ngp/build"
-$targetPath = "NeRFPlugin_external_build"
+$targetPath = "NeRFPlugin/instant-ngp/build"
 
 if (Test-Path $buildPath) {
     Move-Item $buildPath $targetPath -Force
